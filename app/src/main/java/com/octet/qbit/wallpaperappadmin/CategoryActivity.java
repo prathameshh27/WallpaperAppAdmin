@@ -85,12 +85,12 @@ public class CategoryActivity extends AppCompatActivity {
             fireDbRef=fireDb.getReference("category");
             fireDbRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
+                //check if the category already exist
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if(!dataSnapshot.child(categoryString).exists())
                     {
                         Toast.makeText(CategoryActivity.this, "Uploading File", Toast.LENGTH_SHORT).show();
                         uploadFile();
-                        updateDatabase();
                     }
                     else
                         Toast.makeText(CategoryActivity.this, "Entered Category already exist", Toast.LENGTH_SHORT).show();
@@ -100,17 +100,14 @@ public class CategoryActivity extends AppCompatActivity {
                 public void onCancelled(@NonNull DatabaseError databaseError) {
                 }
             });
-
-            //fireDbRef.child(categoryString).child("link").setValue(urlTask.getResult().toString());
-            //Log.i("customLog", "onActivityResult | stored urltask = "+urlTask.getResult().toString());
         }
     }
 
     public void uploadFile(){
         fireStorage = FirebaseStorage.getInstance();
         fireStorageRef= fireStorage.getReference(categoryString+"/"+thumbNameString);
-
         uploadTask = fireStorageRef.putFile(imageUri);
+
         urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
             @Override
             public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
@@ -122,16 +119,19 @@ public class CategoryActivity extends AppCompatActivity {
         }).addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                uploadedImgUrlString =(String)uri.toString();
-                temp = uploadedImgUrlString;
-                Log.i("customLog", "onActivityResult | stored url = "+uploadedImgUrlString);
-                Toast.makeText(CategoryActivity.this, uploadedImgUrlString, Toast.LENGTH_SHORT).show();
+                uploadedImgUrlString=uri.toString();
+                //adds description and image url to the database
+                updateDatabase();
+                Log.i("customLog", "Stored url = "+uploadedImgUrlString);
+                Toast.makeText(CategoryActivity.this, "Done uploading", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     public void updateDatabase(){
-        CategoryData catData = new CategoryData(descString, temp);
+        //object construction for storing description and image url
+        CategoryData catData = new CategoryData(descString, uploadedImgUrlString);
+        //stores above object onto the database
         fireDbRef.child(categoryString).setValue(catData);
     }
 }
