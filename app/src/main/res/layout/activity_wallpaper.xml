@@ -1,9 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".WallpaperActivity">
+    tools:context=".WallpaperActivity"
+    android:padding="10dp">
 
-</android.support.constraint.ConstraintLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFD180"
+        style="@style/Animation.AppCompat.DropDownUp"
+        android:onClick="onClickSelectCat"
+        android:id="@+id/selectCatButton"
+        android:text="Select Category"
+        />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="4dp"
+        android:layout_margin="4dp"
+        android:background="@color/imageFrame"
+        android:layout_below="@+id/selectCatButton"
+        android:layout_above="@+id/uploadCatButton">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/mainImageView"
+            />
+
+        <ImageView
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:alpha="0.4"
+            android:onClick="onClickBrowseImage"
+            android:id="@+id/addImageButon"
+            android:layout_gravity="center"
+            android:background="@drawable/ic_addimage"/>
+
+    </FrameLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#FFD180"
+        style="@style/Animation.AppCompat.DropDownUp"
+        android:onClick="onClickUploadImg"
+        android:id="@+id/uploadCatButton"
+        android:text="upload"
+        />
+
+</RelativeLayout>
